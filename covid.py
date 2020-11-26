@@ -4,6 +4,7 @@ J U S T F O R F U N
 '''
 import requests
 from scrapy.selector import Selector
+import PySimpleGUI as sg
 url = "https://www.worldometers.info/coronavirus/country/mongolia/"
 request = requests.get(url)
 response = str(request.text)
@@ -15,11 +16,16 @@ for index, value in enumerate(result):
 		cases = Selector(text=value).xpath("//span/text()").get()
 	elif index == 1:
 		death = Selector(text=value).xpath("//span/text()").get() 
-
-print("       \n              COVID-19 СТАТИСТИК ")
-print("-----------------------------------------------")
-print("|  Бүртгэгдсэн  |  Эдгэрсэн  |   Нас барсан   |")
-print("-----------------------------------------------")
-print(f"|     {cases}      |    {recovered}     |        {death}       |")
-print("-----------------------------------------------")
-
+sg.theme("Dark")
+layout = [
+[sg.Text(f"Тохиолдол: {cases}")],
+[sg.Text(f"Эдгэрсэн: {recovered}")],
+[sg.Text(f"Нас барсан: {death}")]]
+window = sg.Window("😷 COVID-19 СТАТИСТИК 🇲🇳", layout, size=(400,110), font=('Roboto', 14))
+while True:
+    event, values = window.read()
+    # End program if user closes window or
+    # presses the OK button
+    if event == sg.WIN_CLOSED:
+        break
+window.close()
